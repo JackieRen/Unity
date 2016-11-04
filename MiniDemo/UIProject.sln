@@ -1,0 +1,22 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{55B3CD13-FBC8-AF14-853B-F5BF114E98B2}") = "UIProject", "Assembly-CSharp.csproj", "{0944CBFB-89BA-07E4-78F4-AA48812B1F82}"
+EndProject
+Project("{55B3CD13-FBC8-AF14-853B-F5BF114E98B2}") = "UIProject", "Assembly-CSharp-Editor-firstpass.csproj", "{79A26815-3914-92F1-49FB-DD8F97617BCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0944CBFB-89BA-07E4-78F4-AA48812B1F82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0944CBFB-89BA-07E4-78F4-AA48812B1F82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0944CBFB-89BA-07E4-78F4-AA48812B1F82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0944CBFB-89BA-07E4-78F4-AA48812B1F82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79A26815-3914-92F1-49FB-DD8F97617BCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79A26815-3914-92F1-49FB-DD8F97617BCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79A26815-3914-92F1-49FB-DD8F97617BCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79A26815-3914-92F1-49FB-DD8F97617BCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
