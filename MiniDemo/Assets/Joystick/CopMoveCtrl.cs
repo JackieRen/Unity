@@ -3,43 +3,94 @@ using System.Collections;
 using System;
 
 public class CopMoveCtrl : MonoBehaviour {
-    
-    [Serializable]
-    public class AnimatorParameters{
-        public string _moving;
-        public string _horizotal;
-        public string _vertical;
+
+    [SerializeField]
+    private GameObject m_player;
+    [SerializeField]
+    private RectTransform m_joystick;
+    [SerializeField]
+    private Animator m_animator;
+    [SerializeField]
+    private float m_rotateSpeed = 0.5f;
+
+    private enum ActionState { IDLE, WALK, JOG, RUN }
+    private ActionState m_nowState = ActionState.IDLE;
+    private float m_horOffset;
+    private float m_verOffset;
+    private float m_distanceSum;
+    private float m_rotateAngle;
+    private float m_timepiece;
+    float dir = 0;
+
+    void Start() {
+
     }
-    
-    public Animator _target;
-    public float _speed = 1f;
-    public AnimatorParameters _parameters;
-    
-    private Vector3 _direction;
-    private Coroutine _cououtine;
-    
-    //Joysitck _beginContol invoke
-    public void BeginMove(){
-        _target.SetBool(_parameters._moving, true);
-        _cououtine = StartCoroutine(Move());
+
+    void Update() {
+        PlayerMove();
     }
-    //Joysitck _endControl invoke
-    public void EndMove(){
-        _target.SetBool(_parameters._moving, false);
-        StopCoroutine(_cououtine);
-    }
-    //Joysitck _controlling invoke
-    public void UpdateDirection(Vector3 direction){
-        _direction = direction;
-    }
-    
-    private IEnumerator Move(){
-        while(true){
-            _target.transform.position += _direction * Time.deltaTime * _speed;
-            _target.SetFloat(_parameters._horizotal, _direction.x);
-            _target.SetFloat(_parameters._vertical, _direction.y);
-            yield return null;
+
+    private void PlayerMove() {
+        if (m_joystick.anchoredPosition.x > 0.1 || m_joystick.anchoredPosition.x < -0.1) {
+            m_horOffset = m_joystick.anchoredPosition.x;
+        } else {
+            m_horOffset = 0;
+        }
+        if (m_joystick.anchoredPosition.y > 0.1 || m_joystick.anchoredPosition.y < -0.1) {
+            m_verOffset = m_joystick.anchoredPosition.y;
+        } else {
+            m_verOffset = 0;
+        }
+        m_distanceSum = Mathf.Abs(m_horOffset) + Mathf.Abs(m_verOffset);
+        m_rotateAngle = Mathf.Atan2(m_horOffset, m_verOffset) * Mathf.Rad2Deg;
+        if (m_distanceSum == 0) {
+            m_nowState = ActionState.IDLE;
+        } else if (m_distanceSum < 30) {
+            m_nowState = ActionState.WALK;
+        } else if (m_distanceSum < 90) {
+            m_nowState = ActionState.JOG;
+        } else if (m_distanceSum >= 90) {
+            m_nowState = ActionState.RUN;
+        }
+        PlayerActionStateSwitch(m_nowState);
+        //m_player.transform.localPosition += m_velocity * Time.fixedDeltaTime;
+        //float angle = Mathf.Atan2(m_horOffset, m_verOffset) * Mathf.Rad2Deg;
+        //Animator.GetCurrentAnimationClipState
+        if (m_distanceSum != 0) {
+            m_rotateAngle = Mathf.Atan2(m_horOffset, m_verOffset) * Mathf.Rad2Deg;
+            m_player.transform.rotation = Quaternion.Slerp(m_player.transform.rotation, Quaternion.Euler(0, m_rotateAngle, 0), m_rotateSpeed);
         }
     }
-	
+
+    private void PlayerActionStateSwitch(ActionState state) {
+        switch (state) {
+            case ActionState.IDLE:
+                m_animator.SetBool("Idle", true);
+                m_animator.SetBool("Walk", false);
+                m_animator.SetBool("Jog", false);
+                m_animator.SetBool("Run", false);
+                break;
+            case ActionState.WALK:
+                m_animator.SetBool("Idle", false);
+                m_animator.SetBool("Walk", true);
+                m_animator.SetBool("Jog", false);
+                m_animator.SetBool("Run", false);
+                break;
+            case ActionState.JOG:
+                m_animator.SetBool("Idle", false);
+                m_animator.SetBool("Walk", false);
+                m_animator.SetBool("Jog", true);
+                m_animator.SetBool("Run", false);
+                break;
+            case ActionState.RUN:
+                m_animator.SetBool("Idle", false);
+                m_animator.SetBool("Walk", false);
+                m_animator.SetBool("Jog", false);
+                m_animator.SetBool("Run", true);
+                break;
+            default:
+                break;
+        }
+    }
+
 }
